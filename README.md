@@ -1,6 +1,6 @@
 # AIxLaw Repo
 
- Copyright (C) 2022 William Booth-Clibborn w.j.boothclibborn@gmail.com
+ Copyright (C) 2024 William Booth-Clibborn w.j.boothclibborn@gmail.com
  
  This file is part of the AIxLAW project repo. It is owned by and exclusivly authored by.
 

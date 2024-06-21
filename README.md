@@ -17,8 +17,21 @@
 There are three folders for each of the major components. 
 
 * aixlaw    - Website frontend, everything that you view in your browser
-* backend   - Website backend, provide data to frontend to display and interact with ai
+* springboot   - Website backend, provide data to frontend to display and interact with ai
 * ai        - AI backend, provide AI functionality to the website
+
+## Running website
+
+To run frontend
+
+1. Navigate to frontend with `cd aixlaw`
+2. Install npm dependencesi with `npm install`
+3. Locally host frontend with `npm run dev`
+
+To run backend
+
+1. Navigate to backend with `cd springboot`
+2. run `mvn spring-bootL:run -e`
 
 ## Setup 
 

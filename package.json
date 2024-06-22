@@ -1,0 +1,13 @@
+{
+  "name": "aixlaw",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "serve": "concurrently --kill-others \"cd aixlaw && npm run dev\" \"cd springboot && mvn spring-boot:run\"",
+    "install": "concurrently  \"cd aixlaw && npm install &\" \"cd springboot && mvn clean install\""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

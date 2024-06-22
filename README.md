@@ -1,37 +1,23 @@
 # AIxLaw Repo
 
- Copyright (C) 2024 William Booth-Clibborn w.j.boothclibborn@gmail.com
- 
- This file is part of the AIxLAW project repo. It is owned by and exclusivly authored by.
-
- * William Booth-Clibborn
- * Jade Minwei-Wang
- * Tim Luka Horstmann
- * Taran Molloy
- * William Yu
- 
- The AIxLAW project repo can not be copied, distributed, or used in any fashion without the express
- permission of all authors listed above.
-
+This is the AIxLaw repo. 
 
 There are three folders for each of the major components. 
 
 * aixlaw    - Website frontend, everything that you view in your browser
-* springboot   - Website backend, provide data to frontend to display and interact with ai
+* springboot- Website backend, provide data to frontend to display and interact with ai
 * ai        - AI backend, provide AI functionality to the website
 
 ## Running website
 
-To run frontend
+Ensure node, java, and maven are installed with the correct versions, if not follow the guide in `Setups` chaptar. Use the following instructions to locally run the website.
 
-1. Navigate to frontend with `cd aixlaw`
-2. Install npm dependencesi with `npm install`
-3. Locally host frontend with `npm run dev`
+1. Navigate to home folder `./`
+2. Install requirements with `npm install`
+4. Serve the website with `npm run serve`
+5. To access the website enter into your browser `http://localhost:5173`
 
-To run backend
-
-1. Navigate to backend with `cd springboot`
-2. run `mvn spring-bootL:run -e`
+NOTE: Currently the backend is hosted on `http://localhost:8080`
 
 ## Setup 
 
@@ -47,7 +33,6 @@ Follow these step by step to set up all necessary supporting software to develop
 1. Ensure git is installed with `git -v`, if not follow [this online guide](https://github.com/git-guides/install-git)
 2. Clone the repo with `git clone https://github.com/w2ll2am/AIxLaw`
 3. Enter the repo with `cd AIxLAW`
-
 
 ### 2. Install Frontend Requirements (nvm, node)
 
@@ -105,3 +90,19 @@ For mac
 - H2 Database
 - Lombok
 - Spring Web
+
+
+## Copyright
+
+ Copyright (C) 2024 William Booth-Clibborn w.j.boothclibborn@gmail.com
+ 
+ This file is part of the AIxLAW project repo. It is owned by and exclusivly authored by.
+
+ * William Booth-Clibborn
+ * Jade Minwei-Wang
+ * Tim Luka Horstmann
+ * Taran Molloy
+ * William Yu
+ 
+ The AIxLAW project repo can not be copied, distributed, or used in any fashion without the express
+ permission of all authors listed above.

@@ -14,15 +14,20 @@ There are three folders for each of the major components.
 
 First follow the guide in `Setups` to set up node, java, and maven. Use the following instructions to locally run the website.
 
-1. Navigate to home folder
-2. Install requirements `npm install`
-4. Serve the website `npm run serve`
-5. To access the website enter into your browser `http://localhost:5173`
-6. Test the backend for Windows `wget http://localhost:8080/` or Mac/Linux `curl -v http://localhost:8080/`
+1. Install requirements `npm install`
+2. Serve the website `npm run serve`
+3. To access the website enter into your browser `http://localhost:5173`
+4. Test the backend for Windows `wget http://localhost:8080/` or Mac/Linux `curl -v http://localhost:8080/`
+
+To re-install dependencies
+
+1. Delete conda environment with `conda env remove --name=aixlaw`
+2. Delete both `./node_modules` and `./aixlaw/node_modules` folders 
+3. Reinstall dependencies with `npm run install`
 
 ## Setup 
 
-Follow these chaptars step by step to set up all necessary supporting software to develop and run the website.
+Follow these chapters step by step to set up all necessary supporting software to develop and run the website.
 
 1. Clone the Repo
 2. Install Frontend Requirements (nvm, node)
@@ -86,7 +91,15 @@ Mac / Linux Guide
 4. Install Maven using the [following guide](https://www.baeldung.com/install-maven-on-windows-linux-mac)
 5. Verify Maven install and connection to Java 22 with `mvn -v`
 
-### Summary software versions and initilisation settings
+### 4. Install AI Backend Requirements (python, Google Cloud CLI)
+
+1. Install conda by following [this guide](https://conda.io/projects/conda/en/latest/user-guide/install/index.html)
+2. Set up Google Cloud CLI (`gcloud`) with the following [this guide](https://cloud.google.com/sdk/docs/install)
+3. Connect gcloud to project with `gcloud config set project 875513382753`
+4. Enable Vertex AI API with `gcloud services enable aiplatform.googleapis.com`
+5. Login with your Google account `gcloud auth application-default login`
+
+### Summary of Software Versions and Initilisations
 
 * git 
 * Node v20.15.0
@@ -100,6 +113,8 @@ Mac / Linux Guide
     - H2 Database
     - Lombok
     - Spring Web
+* LangServe initilaised with [this template](rag-google-cloud-vertexai-search)
+    - Python 3.12
 
 ## Copyright
 
@@ -113,5 +128,4 @@ Mac / Linux Guide
  * Taran Molloy
  * William Yu
  
- The AIxLAW project repo can not be copied, distributed, or used in any fashion without the express
- permission of all authors listed above.
+ The AIxLAW project repo can not be copied, distributed, run, or used in any fashion without the express permission of all authors listed above.

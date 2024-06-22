@@ -18,7 +18,7 @@ First follow the guide in `Setups` to set up node, java, and maven. Use the foll
 2. Install requirements `npm install`
 4. Serve the website `npm run serve`
 5. To access the website enter into your browser `http://localhost:5173`
-6. Test the backend with `wget http://localhost:8080/`
+6. Test the backend for Windows `wget http://localhost:8080/` or Mac/Linux `curl -v http://localhost:8080/`
 
 ## Setup 
 

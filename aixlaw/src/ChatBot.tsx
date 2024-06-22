@@ -1,7 +1,7 @@
 // ChatBox.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperclip, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
 
 interface Message {
   user: string;
@@ -61,66 +61,51 @@ const ChatBox: React.FC = () => {
     }
   };
 
-  const handleClosePdfViewer = () => {
-    setPdfUrl(null);
-  };
-
   return (
     <div style={styles.chatBoxContainer}>
-      {pdfUrl ? (
-        <>
-          <button onClick={handleClosePdfViewer} style={styles.closeButton}>
-            <FontAwesomeIcon icon={faTimes} />
-          </button>
-          <div style={styles.pdfViewerContainer}>
-          <iframe src={pdfUrl} style={styles.pdfViewer} title="PDF Viewer" />
-        </div>
-        </>
-
-      ) : (
-        <>
-          <div style={styles.messagesContainer}>
-            {messages.map((message, index) => (
-              <div key={index} style={message.type === 'file' ? styles.fileMessage : styles.message}>
-                <strong>{message.user}: </strong>
-                {message.type === 'text' ? (
-                  message.content
-                ) : (
-                  <a href={message.fileUrl} target="_blank" rel="noopener noreferrer">
-                    {message.fileName}
-                  </a>
-                )}
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-          <div style={styles.inputContainer}>
-            <FontAwesomeIcon
-              icon={faPaperclip}
-              style={styles.icon}
-              onClick={triggerFileInput}
-            />
-            <input
-              type="text"
-              value={input}
-              onChange={handleInputChange}
-              onKeyPress={handleKeyPress}
-              style={styles.input}
-              placeholder="Type a message..."
-            />
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-              accept="application/pdf"
-              style={styles.fileInput}
-            />
-            <button onClick={handleSendMessage} style={styles.sendButton}>
-              Send
-            </button>
-          </div>
-        </>
+      {pdfUrl && (
+        <iframe src={pdfUrl} style={styles.pdfViewer} title="PDF Viewer" />
       )}
+      <div style={styles.messagesContainer}>
+        {messages.map((message, index) => (
+          <div key={index} style={message.type === 'file' ? styles.fileMessage : styles.message}>
+            <strong>{message.user}: </strong>
+            {message.type === 'text' ? (
+              message.content
+            ) : (
+              <a href={message.fileUrl} target="_blank" rel="noopener noreferrer">
+                {message.fileName}
+              </a>
+            )}
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
+      </div>
+      <div style={styles.inputContainer}>
+        <FontAwesomeIcon
+          icon={faPaperclip}
+          style={styles.icon}
+          onClick={triggerFileInput}
+        />
+        <input
+          type="text"
+          value={input}
+          onChange={handleInputChange}
+          onKeyPress={handleKeyPress}
+          style={styles.input}
+          placeholder="Type a message..."
+        />
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileUpload}
+          accept="application/pdf"
+          style={styles.fileInput}
+        />
+        <button onClick={handleSendMessage} style={styles.sendButton}>
+          Send
+        </button>
+      </div>
     </div>
   );
 };
@@ -198,27 +183,15 @@ const styles: { [key: string]: React.CSSProperties } = {
     marginLeft: '10px',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
   },
-  pdfViewerContainer: {
-    position: 'relative',
-    width: '100vw',
-    height: '100vh',
-    backgroundColor: '#333',
-  },
   pdfViewer: {
-    width: '100%',
-    height: '100%',
+    position: 'fixed',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: '80%',
+    height: '80%',
     border: 'none',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: '10px',
-    right: '10px',
-    backgroundColor: 'transparent',
-    border: 'none',
-    color: '#fff',
-    fontSize: '24px',
-    cursor: 'pointer',
-    zIndex: 10,
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
   },
 };
 

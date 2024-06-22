@@ -1,31 +1,32 @@
 # AIxLaw Repo
 
-This is the AIxLaw repo. 
+This is the AIxLaw repo, to run the website first follow steps in `Setup`, then follow steps in `Running the Website`.
+
+## Project
 
 There are three folders for each of the major components. 
 
-* aixlaw    - Website frontend, everything that you view in your browser
-* springboot- Website backend, provide data to frontend to display and interact with ai
-* ai        - AI backend, provide AI functionality to the website
+* `./aixlaw` - Website frontend, everything that you view in your browser
+* `./springboot`- Website backend, provide data to frontend to display and interact with ai
+* `./ai` - AI backend, provide AI functionality to the website
 
-## Running website
+## Running the Website
 
-Ensure node, java, and maven are installed with the correct versions, if not follow the guide in `Setups` chaptar. Use the following instructions to locally run the website.
+First follow the guide in `Setups` to set up node, java, and maven. Use the following instructions to locally run the website.
 
-1. Navigate to home folder `./`
-2. Install requirements with `npm install`
-4. Serve the website with `npm run serve`
+1. Navigate to home folder
+2. Install requirements `npm install`
+4. Serve the website `npm run serve`
 5. To access the website enter into your browser `http://localhost:5173`
-
-NOTE: Currently the backend is hosted on `http://localhost:8080`
+6. Test the backend with `wget http://localhost:8080/`
 
 ## Setup 
 
-Follow these step by step to set up all necessary supporting software to develop and run the website.
+Follow these chaptars step by step to set up all necessary supporting software to develop and run the website.
 
 1. Clone the Repo
-2. Install Frontend Requirements
-3. Install Backend Requirements
+2. Install Frontend Requirements (nvm, node)
+3. Install Backend Requirements (java, maven)
 4. Serve
 
 ### 1. Clone the repo
@@ -38,17 +39,22 @@ Follow these step by step to set up all necessary supporting software to develop
 
 If you don't have node installed already we are using `nvm` to manage our versions of node. First ensure you are in the parent directory when running these steps. 
 
-For Windows use the nvm for windows to manage node.
+Windows Guide
+
 1. Download nvm by downloading the `nvm-setup.exe` file [from here](https://github.com/coreybutler/nvm-windows/releases)
 2. Install Node with `nvm install 20.15.0`
 3. Activate Node with `nvm use 20.15.0`
 4. Verify the Node version with `node -v`
 5. Update `npm` with `npm install -g npm`
 
-For Mac / Linux
+Mac / Linux Guide
+
 1. Download nvm with either
-`run curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash`
-`wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash`
+
+    ```run curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash```
+
+    ```wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash```
+
 2. Install Node with `nvm install 20.15.0`
 3. Activate Node with `nvm use 20.15.0`
 4. Verify the Node version with `node -v`
@@ -56,19 +62,23 @@ For Mac / Linux
 
 ### 3. Install Backend Requirements (Java, Maven)
 
-For Windows
+Windows Guide
 
-1. Ensure no existing Java installation exists with `java -version` 
+1. Check no existing Java installation exists `java -version` 
 2. Download and Install Java 22 with the [following instructions](https://www.oracle.com/java/technologies/downloads/#jdk22-windows)
-3. Open new terminal and run `java -version`, if this does not work restart your computer, if this still does not work try the following steps.
-    1. Navigate to Start --> Edit the system environment variables --> Environment Variables
-    2. On `User variables for {user-name}` create a `JAVA_HOME` with location of your new Java installation (mine points towards `C:\Program Files\Java\jdk-22`)
-    3. In `User variables for {user-name}` click on `Path` and click `Edit`. Delete any existing java directories. 
-    4. Click `New` and the same path as `JAVA_HOME` with an extra directory `\bin` (for the same JAVA_HOME as above my path entry looks like mine points towards `C:\Program Files\Java\jdk-22\bin`)
+3. Check correct java version is installed with `java -version`, if this is not the correct version follow the steps below. 
 4. Install Maven using the [following guide](https://www.baeldung.com/install-maven-on-windows-linux-mac)
 5. Verify Maven install and connection to Java 22 with `mvn -v`
 
-For mac
+Windows Guide - Steps to install correct java version.
+
+1. restart your computer, if this still does not work try the following steps.
+2. Navigate to Start --> Edit the system environment variables --> Environment Variables
+3. On `User variables for {user-name}` create a `JAVA_HOME` with location of your new Javainstallation (mine points towards `C:\Program Files\Java\jdk-22`)
+4. In `User variables for {user-name}` click on `Path` and click `Edit`. Delete any existingjava directories. 
+5. Click `New` and the same path as `JAVA_HOME` with an extra directory `\bin` (for the sameJAVA_HOME as above my path entry looks like mine points towards `C:\ProgramFiles\Java\jdk-22\bin`)
+
+Mac / Linux Guide
 
 1. Ensure no existing Java installation exists with `java -version` 
 2. Download and Install Java 22 with the [following instructions](https://www.oracle.com/java/technologies/downloads/#jdk22-windows)
@@ -77,20 +87,19 @@ For mac
 5. Verify Maven install and connection to Java 22 with `mvn -v`
 
 ### Summary software versions and initilisation settings
+
 * git 
 * Node v20.15.0
 * npm 10.8.1
 * React initialised with https://vitejs.dev/guide/ using 
-- React + TS
+    - React + TS
 * Java 22.0.1
 * Maven Latest (3.9.8)
 * Springboot initialized with https://start.spring.io/ using 
-- Spring Boot 3.3.1 + Maven + Java 22
-- Vertex AI Gemini
-- H2 Database
-- Lombok
-- Spring Web
-
+    - Spring Boot 3.3.1 + Maven + Java 22
+    - H2 Database
+    - Lombok
+    - Spring Web
 
 ## Copyright
 

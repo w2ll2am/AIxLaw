@@ -1,0 +1,89 @@
+Extract the following information from the provided tenancy contract and format the output as a JSON object:
+
+<elements_to_extract>
+{
+    \"tenancy_details\": {
+        \"is_assured_shorthold_tenancy\": \"\",
+        \"commencement_date\": \"\",
+        \"rent _amount\": \"\",
+        \"rent_payment_date\": \"\",
+        \"rent_payment_quantum\": \"\",
+        \"deposit_amount\": \"\",
+        \"fixed_term_duration\": \"\",
+        \"is_pets_allowed\": \"\",
+        \"is_pets_allowed_with_landlord_consent\": \"\",
+        \"is_assignment_or_sublet_allowed\": \"\",
+        \"is_assignment_or_sublet_allowed_with_landlord_permission\": \"\",
+        \"responsibilities\": {
+            \"is_landlord_responsible_for_council_tax\": \"\",
+            \"is_landlord_responsible_for_gas\": \"\",
+            \"is_landlord_responsible_for_water\": \"\",
+            \"is_landlord_responsible_for_electricity\": \"\",
+            \"is_landlord_responsible_for_internet\": \"\",
+            \"is_landlord_responsible_for_telephone\": \"\",
+            \"is_landlord_responsible_for_tv_licence\": \"\",
+        },
+        \"termination_grounds\": \"\",
+        \"landlord_access_notice_period\": \"\"
+        \"landlord_access_rights\": \"\"
+        
+    }
+}
+<elements_to_extract />
+
+<context_for_each_field>
+Ideally, the final output should be a model capable of reading a tenancy contract and determining: 
+
+The legal category of the tenancy itself, True for assured shorthold tenancy, false  for assured tenancy 
+
+The commencement date of the tenancy
+
+The rent amount, together with whether this is per week or per month. Format as an integer number with no currency symbol
+
+The rent payment dates. Identify the dates on which rent instalment or payments are due
+
+The rent payment quantum. Identify the amount that should be paid on each instalment or payment of rent
+
+Amount of the deposit. Format as an integer number with no currency symbol. 
+
+Duration of fixed term or term or length of time of the tenancy, starting from the commencement date. Format as number of weeks.
+
+Whether the tenancy allows pets, True or False 
+
+Whether the tenancy allows pets with the landlord's consent, True or False 
+
+Whether the tenant may assign, underlet or sublet the property, True or False
+
+Whether the tenant may assign, underlet, or sublet the property, with the landlord’s permission, True or False
+
+Is the landlord responsible for each of the following bills, True or False for each of the following: 
+
+<responsibilities>
+
+Council Tax
+
+Gas 
+
+Water  
+
+Electricity  
+
+Internet  
+
+Telephone 
+
+TV licence 
+
+<responsibilities />
+
+What grounds the landlord has for termination of the tenancy during the fixed term (and whether these are broader than the grounds given to the landlord by law (Schedule II of the Housing Act 1988) 
+
+The period of advance notice for Landlord\'s right of access to the property, give the advanced notice in an integer number of hours 
+
+Landlord\'s right of access to the property, what reasons the landlord may access
+
+<data_to_convert />
+
+- The JSON schema must be followed during the extraction.
+- The values must only include text strings found in the document.
+- Generate null for missing entities.

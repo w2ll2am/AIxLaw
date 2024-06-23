@@ -1,0 +1,25 @@
+{
+    "tenancy_details": {
+        "is_assured_shorthold_tennacy": "True",
+        "commencement_date": "1st September 2021",
+        "rent_instalment_amount": "11,250",
+        "rent_instalment_date": "1st July 2021",
+        "rent_amount": "2250",
+        "deposit_amount": "2,250",
+        "fixed_term_duration": "11",
+        "is_pets_allowed": "False",
+        "is_assignment_or_sublet_allowed": "False",
+        "responsibilities": {
+            "is_included_in_rent_council_tax": "True",
+            "is_included_in_rent_gas": "False",
+            "is_included_in_rent_water": "False",
+            "is_included_in_rent_electricity": "False",
+            "is_included_in_rent_internet": "True",
+            "is_included_in_rent_telephone": "False",
+            "is_included_in_rent_tv_licence": "False"
+        },
+        "termination_grounds": "any of the grounds of Schedule 2 of the Housing Act 1988 apply (these grounds allow the Landlord to seek possession of the Property in specified circumstances, including rent arrears, damage to the Property, nuisance and breach of a condition of the tenancy agreement), or",
+        "landlord_access_notice_period": "24",
+        "landlord_access_rights": "to view the state and condition (on a monthly basis) and to execute repairs and other works upon the Property or other properties, or"
+    }
+}

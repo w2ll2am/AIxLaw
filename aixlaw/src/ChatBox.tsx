@@ -3,7 +3,7 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faPaperclip, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
-import contractPayload from './contract_payload.json';
+// import contractPayload from './contract_payload.json';
 // import contractPayload from './contract_payload_bad.json';
 
 interface Message {
@@ -24,7 +24,7 @@ const ChatBox: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const [uploadResponse, setUploadResponse] = useState<JSON | null>(null);
+  const [contractPayload, setContractPayload] = useState(null); 
 
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
@@ -41,11 +41,17 @@ const ChatBox: React.FC = () => {
     if (pdfUri) {
       console.log(pdfUri);
     }
-
-    if (uploadResponse) {
-      console.log(uploadResponse)
+    if (contractPayload) {
+      console.log(contractPayload)
+      // Send alerts on tenancy and bill info
+      const sublet = extractTenancyDetails(contractPayload);
+      showSubletInfo(sublet);
+      const billInfo = extractBillInfo(contractPayload);
+      showBillInfo(billInfo);
+      const depositCheck = checkDepositExceedsRent(contractPayload);
+      showDepositInfo(depositCheck);
     }
-  }, [pdfUrl, pdfUri, uploadResponse]);
+  }, [pdfUrl, pdfUri, contractPayload]);
 
   const extractTenancyDetails = (jsonObject) => {
     if (!jsonObject || !jsonObject.tenancy_details) {
@@ -107,10 +113,22 @@ const ChatBox: React.FC = () => {
     return (depositAmountNumeric > 5 * rentAmountNumeric) ? 'Deposit exceeds 5 weeks of rent: Yes' : 'Deposit exceeds 5 weeks of rent: No';
 };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (input.trim() !== '') {
       setMessages([...messages, { user: 'You', content: input, type: 'text' }]);
       setInput('');
+
+      // Post PDF to backend
+      const formData = new FormData();
+      formData.append('message', input)
+
+      const response = await axios.post('http://127.0.0.1:8000/chat_message', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      setMessages([...messages, { user: 'Ally', content: response.data.response, type: 'text' }]);
+
     } 
   };
 
@@ -136,14 +154,6 @@ const ChatBox: React.FC = () => {
       ]);
       setPdfUrl(fileUrl);
 
-      // Send alerts on tenancy and bill info
-      const sublet = extractTenancyDetails(contractPayload);
-      showSubletInfo(sublet);
-      const billInfo = extractBillInfo(contractPayload);
-      showBillInfo(billInfo);
-      const depositCheck = checkDepositExceedsRent(contractPayload);
-      showDepositInfo(depositCheck);
-
       // Post PDF to backend
       const formData = new FormData();
       formData.append('file', file);
@@ -155,9 +165,10 @@ const ChatBox: React.FC = () => {
         }
       });
 
-      console.log(response);
+      const entities = response.data.entities;
+      setContractPayload(entities);
+
       setPdfUri(response.data["uri"]);
-      setUploadResponse(response.data);
     }
   };
 
@@ -214,27 +225,7 @@ const ChatBox: React.FC = () => {
         },
       });
   };
-
-  const showDepositCheck = (message: string) => {
-    const messageIncludesYes = /\Yes\b/.test(message);
-      toast.error(<div dangerouslySetInnerHTML={{ __html: message }} />, {
-      position: "top-left",
-      autoClose: false,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      style: {
-        background: messageIncludesYes ? '#ffe6e6' : '#e6ffe6',
-        color: '#000000', 
-        fontSize: '13px', 
-        textAlign: 'left', 
-      },
-    });
-  };
   
-
   const showDepositInfo = (message: string) => {
     // Check if the message contains the words 'Yes'
     const depositError = /\Yes\b/.test(message);
@@ -393,4 +384,4 @@ const styles: { [key: string]: React.CSSProperties } = {
   },
 };
 
-export default ChatBox;
+export default ChatBox;

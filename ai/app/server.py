@@ -44,7 +44,7 @@ def upload(file: UploadFile = File(...)):
         print(uri)
         chat.set_current_uri(uri)
         entities = chat.extract_entities()
-        print(entities)
+    
     except Exception as e:
         return {"message": f"There was an error uploading the file: {traceback.format_exc()}"}
     finally:
@@ -57,20 +57,24 @@ def upload(file: UploadFile = File(...)):
     }
 
 
-@app.post("/chat")
-async def login(message: Annotated[str, Form()], uri: Annotated[str, Form()]):
+@app.post("/chat_message")
+async def chat_message(message: Annotated[str, Form()], uri: Annotated[str, Form()]):
 
-    chat.generate()
+    response = chat.chat(message)
     return {
         "message": message,
-        "uri": uri
+        "uri": uri,
+        "response": response
     }
-
-
 
 @app.get("/state")
 def state():
     return chat.get_current_uri()
+
+@app.get("/reset")
+def reset():
+    chat.set_current_uri(None)
+    return "done"
 
 
 # Edit this to add the chain you want to add

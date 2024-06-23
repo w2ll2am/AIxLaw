@@ -40,6 +40,7 @@ class Chat:
 
         self.current_uri = None
         self._current_document = None
+        self.current_entities = None
         self.message_history = []
 
     def uri_to_document(self):
@@ -52,8 +53,12 @@ class Chat:
     def set_current_uri(self, file_uri):
         self.current_uri = file_uri
         self.message_history = []
+        self.current_entities = None
 
-        self._current_document = self.uri_to_document()
+        if file_uri is not None:
+            self._current_document = self.uri_to_document()
+        else:
+            self._current_document = None
         
         return self.current_uri
 
@@ -66,13 +71,34 @@ class Chat:
             generation_config=self.generation_config,
             safety_settings=self.safety_settings,
         )
-        
-        return response
+        self.current_entities = str(response)
+        return str(response)
     
 
-    def chat(message):
+    def chat(self, message):
 
-        return 
+        self.message_history.append(f"User: {message}")
+        constructor = f"""
+            <EXTRACTED DATA>
+                {self.current_entities}
+            </EXTRACTED DATA>
+
+            <CHAT HISTORY>
+                {"\n\n".join(self.message_history)}
+            </CHAT HISTORY>
+        """
+
+        response = self.model.generate_content(
+            [self._current_document, constructor],
+            generation_config=self.generation_config,
+            safety_settings=self.safety_settings,
+        )
+
+        print(response)
+        
+        self.message_history.append(f"Gemini-Flash: {response.text}")
+        print(self.message_history)
+        return response.text
 
 if __name__ == "__main__":
     document1 = Part.from_uri(

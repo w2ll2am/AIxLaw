@@ -3,6 +3,8 @@ import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faPaperclip, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
+import contractPayload from './contract_payload.json';
+// import contractPayload from './contract_payload_bad.json';
 
 interface Message {
   user: string;
@@ -34,18 +36,76 @@ const ChatBox: React.FC = () => {
     if (pdfUrl) {
       console.log(pdfUrl);
     }
-    if  (pdfUri) {
+    if (pdfUri) {
       console.log(pdfUri);
     }
   }, [pdfUrl, pdfUri]);
+
+  const extractTenancyDetails = (jsonObject) => {
+    if (!jsonObject || !jsonObject.tenancy_details) {
+      return {}; // Return empty object if input is invalid or missing required structure
+    }
+    const {
+      is_assignment_or_sublet_allowed,
+    } = jsonObject.tenancy_details;
+
+    const sublet = `
+       - <strong>Assignment or subletting:</strong> ${is_assignment_or_sublet_allowed === 'True' ? 'Yes' : 'No'}
+    `;
+
+    return sublet.trim();
+  };
+
+  const extractBillInfo = (jsonObject) => {
+    if (!jsonObject || !jsonObject.tenancy_details) {
+      return {}; // Return empty object if input is invalid or missing required structure
+    }
+    const {
+      responsibilities: {
+        is_included_in_rent_council_tax,
+        is_included_in_rent_gas,
+        is_included_in_rent_water,
+        is_included_in_rent_electricity,
+        is_included_in_rent_internet,
+        is_included_in_rent_telephone,
+        is_included_in_rent_tv_licence
+      }
+    } = jsonObject.tenancy_details;
+
+    const includedInBill = `
+      - <strong>Council Tax:</strong> ${is_included_in_rent_council_tax === 'True' ? 'Landlord' : 'Tenant'}<br/>
+      - <strong>Gas:</strong> ${is_included_in_rent_gas === 'True' ? 'Landlord' : 'Tenant'}<br/>
+      - <strong>Water:</strong> ${is_included_in_rent_water === 'True' ? 'Landlord' : 'Tenant'}<br/>
+      - <strong>Electricity:</strong> ${is_included_in_rent_electricity === 'True' ? 'Landlord' : 'Tenant'}<br/>
+      - <strong>Internet:</strong> ${is_included_in_rent_internet === 'True' ? 'Landlord' : 'Tenant'}<br/>
+      - <strong>Telephone:</strong> ${is_included_in_rent_telephone === 'True' ? 'Landlord' : 'Tenant'}<br/>
+      - <strong>TV Licence:</strong> ${is_included_in_rent_tv_licence === 'True' ? 'Landlord' : 'Tenant'}<br/>
+    `;
+
+    return includedInBill.trim();
+  };
+
+
+  const checkDepositExceedsRent = (jsonObject) => {
+    if (!jsonObject || !jsonObject.tenancy_details) {
+        return false; // Return false if input is invalid or missing required structure
+    }
+
+    const { rent_amount, deposit_amount } = jsonObject.tenancy_details;
+
+    // Remove commas and convert to numeric values
+    const rentAmountNumeric = parseFloat(rent_amount.replace(/,/g, ''));
+    const depositAmountNumeric = parseFloat(deposit_amount.replace(/,/g, ''));
+
+    // Check if deposit amount exceeds 5 times the rent amount
+    return (depositAmountNumeric > 5 * rentAmountNumeric) ? 'Deposit exceeds 5 weeks of rent: Yes' : 'Deposit exceeds 5 weeks of rent: No';
+};
 
   const handleSendMessage = () => {
     if (input.trim() !== '') {
       setMessages([...messages, { user: 'You', content: input, type: 'text' }]);
       setInput('');
-    } else {
-      showAlertMessage('Please enter a message.');
-    }
+    } 
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,6 +130,14 @@ const ChatBox: React.FC = () => {
       ]);
       setPdfUrl(fileUrl);
 
+      // Send alerts on tenancy and bill info
+      const sublet = extractTenancyDetails(contractPayload);
+      showSubletInfo(sublet);
+      const billInfo = extractBillInfo(contractPayload);
+      showBillInfo(billInfo);
+      const depositCheck = checkDepositExceedsRent(contractPayload);
+      showDepositInfo(depositCheck);
+
       // Post PDF to backend
       const formData = new FormData();
       formData.append('file', file);
@@ -81,29 +149,8 @@ const ChatBox: React.FC = () => {
         }
       });
       setPdfUri(response.data["uri"]);
-      
     }
   };
-
-  // const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file && file.type === 'application/pdf') {
-  //     try {
-        
-
-  //       // Handle response from backend
-  //       const { fileName, fileUrl } = response.data;
-  //       setMessages([
-  //         ...messages,
-  //         { user: 'You', content: '', type: 'file', fileName, fileUrl },
-  //       ]);
-  //       setPdfUrl(fileUrl);
-  //     } catch (error) {
-  //       console.error('Error uploading file:', error);
-  //     }
-  //   }
-  // };
-
 
   const triggerFileInput = () => {
     if (fileInputRef.current) {
@@ -119,23 +166,85 @@ const ChatBox: React.FC = () => {
     }
   };
 
-  const showAlertMessage = (message: string) => {
-    toast.error(message, {
+  const showSubletInfo = (message: string) => {
+    // Check if the message contains the words 'No'
+    const messageIncludesNo = /\bNo\b/.test(message);
+      toast.error(<div dangerouslySetInnerHTML={{ __html: message }} />, {
       position: "top-left",
-      autoClose: 3000,
+      autoClose: pdfUrl==null ? true : false,
       hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
       progress: undefined,
       style: {
-        background: '#f0f0f0', 
+        background: messageIncludesNo ? '#ffe6e6' : '#e6ffe6',
         color: '#000000', 
-        fontSize: '16px', 
-        textAlign: 'center', 
+        fontSize: '13px', 
+        textAlign: 'left', 
       },
     });
   };
+
+  const showBillInfo = (message: string) => {
+    // Check if the message contains the words 'Tenant'
+    const messageIncludesTenant = /\Tenant\b/.test(message);
+      toast.error(<div dangerouslySetInnerHTML={{ __html: message }}/>, {
+        position: "top-left",
+        autoClose: false,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        style: {
+          background: messageIncludesTenant ? '#FFD699' : '#e6ffe6',
+          color: '#000000',
+          fontSize: '13px', 
+          textAlign: 'left', 
+        },
+      });
+  };
+
+  const showDepositCheck = (message: string) => {
+    const messageIncludesYes = /\Yes\b/.test(message);
+      toast.error(<div dangerouslySetInnerHTML={{ __html: message }} />, {
+      position: "top-left",
+      autoClose: false,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      style: {
+        background: messageIncludesYes ? '#ffe6e6' : '#e6ffe6',
+        color: '#000000', 
+        fontSize: '13px', 
+        textAlign: 'left', 
+      },
+    });
+  };
+  
+
+  const showDepositInfo = (message: string) => {
+    // Check if the message contains the words 'Yes'
+    const depositError = /\Yes\b/.test(message);
+    toast.error(<div dangerouslySetInnerHTML={{ __html: message }} />, {
+    position: "top-left",
+    autoClose: false,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    style: {
+      background: depositError ? '#FFD699' : '#e6ffe6', 
+      color: '#000000', 
+      fontSize: '13px', 
+      textAlign: 'left', 
+    },
+  });
+};
 
   return (
     <div style={styles.screen}>

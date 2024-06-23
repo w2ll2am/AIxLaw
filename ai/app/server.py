@@ -6,7 +6,9 @@ from langserve import add_routes
 import uuid
 
 from app.upload import StorageManager
+from app.chat import Chat    
 
+import traceback
 
 app = FastAPI()
 origins = ["*"]
@@ -19,6 +21,7 @@ app.add_middleware(
 )
 
 storage = StorageManager()
+chat = Chat()
 
 @app.get("/")
 async def redirect_root_to_docs():
@@ -37,24 +40,37 @@ def upload(file: UploadFile = File(...)):
             file.filename,
             uuid_name,
         )
-        
+
+        print(uri)
+        chat.set_current_uri(uri)
+        entities = chat.extract_entities()
+        print(entities)
     except Exception as e:
-        return {"message": f"There was an error uploading the file: {str(e)}"}
+        return {"message": f"There was an error uploading the file: {traceback.format_exc()}"}
     finally:
         file.file.close()
 
     return {
         "message": f"Successfully uploaded {file.filename}",
-        "uri": uri
+        "uri": uri,
+        "entities": str(entities)
     }
 
 
 @app.post("/chat")
 async def login(message: Annotated[str, Form()], uri: Annotated[str, Form()]):
+
+    chat.generate()
     return {
         "message": message,
         "uri": uri
     }
+
+
+
+@app.get("/state")
+def state():
+    return chat.get_current_uri()
 
 
 # Edit this to add the chain you want to add

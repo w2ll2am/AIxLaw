@@ -15,9 +15,10 @@ class StorageManager:
         blob = bucket.blob(destination_path+destination_blob_name)
         blob.upload_from_filename(path_to_file)
 
-        uri = blob.path_helper(self.bucket_name, destination_blob_name)
-        print(f"> Uploaded {destination_blob_name} to {self.bucket_name} with\n | url: {blob.public_url}\n | uri: gs://{uri}")
-            
+        uri = self.bucket_name + "/" + destination_blob_name
+        uri = f"gs://{uri}"
+        print(f"> Uploaded {destination_blob_name} to {self.bucket_name} with\n | url: {blob.public_url}\n | uri: {uri}")
+        
         return uri
     
 if __name__ == "__main__":

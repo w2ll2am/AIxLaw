@@ -1,11 +1,22 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
 from langserve import add_routes
 import uuid
 
 from app.upload import StorageManager
 
+
 app = FastAPI()
+origins = ["*"]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 storage = StorageManager()
 
 @app.get("/")
@@ -58,4 +69,4 @@ def upload(file: UploadFile = File(...)):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="localhost", port=8000)

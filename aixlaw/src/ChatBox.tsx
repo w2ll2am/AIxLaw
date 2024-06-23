@@ -15,7 +15,10 @@ interface Message {
 const ChatBox: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
+  // Local file URL
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+  // Bucket file URI
+  const [pdfUri, setPdfUri] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -31,7 +34,10 @@ const ChatBox: React.FC = () => {
     if (pdfUrl) {
       console.log(pdfUrl);
     }
-  }, [pdfUrl]);
+    if  (pdfUri) {
+      console.log(pdfUri);
+    }
+  }, [pdfUrl, pdfUri]);
 
   const handleSendMessage = () => {
     if (input.trim() !== '') {
@@ -52,46 +58,51 @@ const ChatBox: React.FC = () => {
     }
   };
 
-  // const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
-  //   if (file && file.type === 'application/pdf') {
-
-  //     const fileUrl = URL.createObjectURL(file);
-  //     setMessages([
-  //       ...messages,
-  //       { user: 'You', content: '', type: 'file', fileName: file.name, fileUrl },
-  //     ]);
-  //     setPdfUrl(fileUrl);
-  //     // POST api
-  //   }
-  // };
-
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'application/pdf') {
-      try {
-        const formData = new FormData();
-        formData.append('pdfFile', file);
+      
+      // Create PDF object and display in the frontend
+      const fileUrl = URL.createObjectURL(file);
+      setMessages([
+        ...messages,
+        { user: 'You', content: '', type: 'file', fileName: file.name, fileUrl },
+      ]);
+      setPdfUrl(fileUrl);
 
-        // Send POST request to backend
-        const response = await axios.post('http://127.0.0.1:8000/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
+      // Post PDF to backend
+      const formData = new FormData();
+      formData.append('file', file);
 
-        // Handle response from backend
-        const { fileName, fileUrl } = response.data;
-        setMessages([
-          ...messages,
-          { user: 'You', content: '', type: 'file', fileName, fileUrl },
-        ]);
-        setPdfUrl(fileUrl);
-      } catch (error) {
-        console.error('Error uploading file:', error);
-      }
+      // Send POST request to backend
+      const response = await axios.post('http://127.0.0.1:8000/upload', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      setPdfUri(response.data["uri"]);
+      
     }
   };
+
+  // const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file && file.type === 'application/pdf') {
+  //     try {
+        
+
+  //       // Handle response from backend
+  //       const { fileName, fileUrl } = response.data;
+  //       setMessages([
+  //         ...messages,
+  //         { user: 'You', content: '', type: 'file', fileName, fileUrl },
+  //       ]);
+  //       setPdfUrl(fileUrl);
+  //     } catch (error) {
+  //       console.error('Error uploading file:', error);
+  //     }
+  //   }
+  // };
 
 
   const triggerFileInput = () => {

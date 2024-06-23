@@ -8,6 +8,7 @@
     "install": "concurrently \"cd aixlaw && npm install &\"  \"cd ai && conda env create --file=environment.yml \""
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.5.2",
     "concurrently": "^8.2.2"
   }
 }

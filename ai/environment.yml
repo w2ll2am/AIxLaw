@@ -14,3 +14,4 @@ dependencies:
     - langchain-google-vertexai
     - langchain-google-community[docai]
     - google-cloud-discoveryengine
+    - python-multipart

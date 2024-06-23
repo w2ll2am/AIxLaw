@@ -18,7 +18,7 @@ class StorageManager:
         uri = blob.path_helper(self.bucket_name, destination_blob_name)
         print(f"> Uploaded {destination_blob_name} to {self.bucket_name} with\n | url: {blob.public_url}\n | uri: gs://{uri}")
             
-        return blob.public_url
+        return uri
     
 if __name__ == "__main__":
     print("Testing upload of file to GCloud")

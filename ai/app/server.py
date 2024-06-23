@@ -58,12 +58,11 @@ def upload(file: UploadFile = File(...)):
 
 
 @app.post("/chat_message")
-async def chat_message(message: Annotated[str, Form()], uri: Annotated[str, Form()]):
+async def chat_message(message: Annotated[str, Form()]):
 
     response = chat.chat(message)
     return {
         "message": message,
-        "uri": uri,
         "response": response
     }
 

@@ -1,4 +1,5 @@
-from fastapi import FastAPI, File, UploadFile
+from typing import Annotated
+from fastapi import FastAPI, File, Form, UploadFile, Request
 from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
 from langserve import add_routes
@@ -44,6 +45,14 @@ def upload(file: UploadFile = File(...)):
 
     return {
         "message": f"Successfully uploaded {file.filename}",
+        "uri": uri
+    }
+
+
+@app.post("/chat")
+async def login(message: Annotated[str, Form()], uri: Annotated[str, Form()]):
+    return {
+        "message": message,
         "uri": uri
     }
 

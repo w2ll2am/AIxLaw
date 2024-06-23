@@ -41,7 +41,6 @@ def upload(file: UploadFile = File(...)):
             uuid_name,
         )
 
-        print(uri)
         chat.set_current_uri(uri)
         entities = chat.extract_entities()
     
@@ -53,7 +52,7 @@ def upload(file: UploadFile = File(...)):
     return {
         "message": f"Successfully uploaded {file.filename}",
         "uri": uri,
-        "entities": str(entities)
+        "entities": entities
     }
 
 

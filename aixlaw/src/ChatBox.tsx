@@ -22,6 +22,8 @@ const ChatBox: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  const [uploadResponse, setUploadResponse] = useState<JSON | null>(null);
+
   const scrollToBottom = () => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -37,7 +39,11 @@ const ChatBox: React.FC = () => {
     if  (pdfUri) {
       console.log(pdfUri);
     }
-  }, [pdfUrl, pdfUri]);
+
+    if (uploadResponse) {
+      console.log(uploadResponse)
+    }
+  }, [pdfUrl, pdfUri, uploadResponse]);
 
   const handleSendMessage = () => {
     if (input.trim() !== '') {
@@ -80,8 +86,10 @@ const ChatBox: React.FC = () => {
           'Content-Type': 'multipart/form-data'
         }
       });
+
+      console.log(response);
       setPdfUri(response.data["uri"]);
-      
+      setUploadResponse(response.data);
     }
   };
 

@@ -3,6 +3,9 @@ import vertexai
 from vertexai.generative_models import GenerativeModel, Part, FinishReason
 import vertexai.preview.generative_models as generative_models
 
+import json
+
+
 class Chat:
     generation_config = {
         "max_output_tokens": 8192,
@@ -72,7 +75,8 @@ class Chat:
             safety_settings=self.safety_settings,
         )
         self.current_entities = str(response)
-        return str(response)
+        dictionary = json.loads(response.text[7:-3])
+        return dictionary
     
 
     def chat(self, message):
@@ -101,16 +105,18 @@ class Chat:
         return response.text
 
 if __name__ == "__main__":
-    document1 = Part.from_uri(
-        mime_type="application/pdf",
-        # uri="gs://cloud-samples-data/generative-ai/pdf/earnings_statement.pdf"
-        # uri = "gs://aixlaw/dash sample.pdf"
-        uri = "gs://aixlaw/o/0c2e2cb0-8f44-420b-8b21-042fb2c67011"
-    )
+    # document1 = Part.from_uri(
+    #     mime_type="application/pdf",
+    #     # uri="gs://cloud-samples-data/generative-ai/pdf/earnings_statement.pdf"
+    #     # uri = "gs://aixlaw/dash sample.pdf"
+    #     uri = "gs://aixlaw/o/0c2e2cb0-8f44-420b-8b21-042fb2c67011"
+    # )
 
-    text1 = """You are a chatbot. follow these instructions"""
+    # text1 = """You are a chatbot. follow these instructions"""
 
-    chat = Chat()
-    chat.set_current_uri("gs://aixlaw/o/6e7a268f-4864-4660-961e-2a8ed61aa41e")
-    entities = chat.extract_entities()
+    # chat = Chat()
+    # chat.set_current_uri("gs://aixlaw/o/6e7a268f-4864-4660-961e-2a8ed61aa41e")
+    # entities = chat.extract_entities()
 
+    to = "```json\n{\n    \"tenancy_details\": {\n        \"is_assured_shorthold_tenancy\": \"True\",\n        \"commencement_date\": \"1st September 2021\",\n        \"rent_amount\": \"450\",\n        \"rent_payment_date\": \"1st July 2021\",\n        \"rent_payment_quantum\": \"11,250\",\n        \"deposit_amount\": \"2,250\",\n        \"fixed_term_duration\": \"50\",\n        \"is_pets_allowed\": \"False\",\n        \"is_pets_allowed_with_landlord_consent\": \"True\",\n        \"is_assignment_or_sublet_allowed\": \"False\",\n        \"is_assignment_or_sublet_allowed_with_landlord_permission\": \"True\",\n        \"responsibilities\": {\n            \"is_landlord_responsible_for_council_tax\": \"False\",\n            \"is_landlord_responsible_for_gas\": \"False\",\n            \"is_landlord_responsible_for_water\": \"False\",\n            \"is_landlord_responsible_for_electricity\": \"False\",\n            \"is_landlord_responsible_for_internet\": \"True\",\n            \"is_landlord_responsible_for_telephone\": \"False\",\n            \"is_landlord_responsible_for_tv_licence\": \"False\"\n        },\n        \"termination_grounds\": \"the Rent or any part of it is in arrears, whether formally demanded or not, or\\nthe Tenant is in breach of any of the obligations under this agreement, or\\nany of the grounds of Schedule 2 of the Housing Act 1988 apply (these grounds allow the Landlord to seek possession of the Property in specified circumstances, including rent arrears, damage to the Property, nuisance and breach of a condition of the tenancy agreement), or\\na notice is served under section 21 of the Housing Act 1988 (section 21 gives the Landlord a right to end an assured shorthold tenancy without any specific reason, though only after any fixed term has ended, or in operation of a break clause).\",\n        \"landlord_access_notice_period\": \"24\",\n        \"landlord_access_rights\": \"to view the state and condition (on a monthly basis) and to execute repairs and other works upon the Property or other properties, or\\nto show prospective purchasers the Property at all times during the Term and to erect a board to indicate that the Property is for sale, or\\nto show prospective tenants the Property, during the last month of the Term and to erect a board to indicate that the Property is to let.\"\n    }\n}\n```"
+    json.loads(to)

@@ -1,0 +1,16 @@
+name: aixlaw
+channels:
+  - defaults
+dependencies:
+  - python=3.12
+  - ipython
+  - ipykernel
+  - jupyter
+  - pip
+  - pip:
+    - langserve[all]
+    - langchain-cli
+    - langchain-google-genai
+    - langchain-google-vertexai
+    - langchain-google-community[docai]
+    - google-cloud-discoveryengine

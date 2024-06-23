@@ -1,0 +1,13 @@
+{
+  "name": "aixlaw",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "serve": "concurrently --kill-others \"cd aixlaw && npm run dev\" \"cd ai && conda activate aixlaw && langchain serve\"",
+    "install": "concurrently \"cd aixlaw && npm install &\"  \"cd ai && conda env create --file=environment.yml \""
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

@@ -7,8 +7,9 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 
+
 # Get project, data store, and model type from env variables
-project_id = "875513382753"
+project_id = "cambridge-law24cam-7868"
 data_store_id = os.environ.get("DATA_STORE_ID")
 model_type = os.environ.get("MODEL_TYPE")
 

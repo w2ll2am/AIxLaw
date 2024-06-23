@@ -16,6 +16,18 @@ from rag_google_cloud_vertexai_search.chain import chain as rag_google_cloud_ver
 add_routes(app, rag_google_cloud_vertexai_search_chain, path="/rag-google-cloud-vertexai-search")
 
 
+# import vertexai
+# vertexai.init(project="cambridge-law24cam-7868", location=<LOCATION>)
+
+# llm = VertexAI(
+#     model_name="text-bison@001",
+#     max_output_tokens=256,
+#     temperature=0.1,
+#     top_p=0.8,
+#     top_k=40,
+#     verbose=True,)
+
+# embeddings = VertexAIEmbeddings()
 
 if __name__ == "__main__":
     import uvicorn

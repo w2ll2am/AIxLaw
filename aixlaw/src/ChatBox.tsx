@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPaperPlane, faPaperclip, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { toast } from 'react-toastify';
@@ -51,17 +52,47 @@ const ChatBox: React.FC = () => {
     }
   };
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  // const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file && file.type === 'application/pdf') {
+
+  //     const fileUrl = URL.createObjectURL(file);
+  //     setMessages([
+  //       ...messages,
+  //       { user: 'You', content: '', type: 'file', fileName: file.name, fileUrl },
+  //     ]);
+  //     setPdfUrl(fileUrl);
+  //     // POST api
+  //   }
+  // };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file && file.type === 'application/pdf') {
-      const fileUrl = URL.createObjectURL(file);
-      setMessages([
-        ...messages,
-        { user: 'You', content: '', type: 'file', fileName: file.name, fileUrl },
-      ]);
-      setPdfUrl(fileUrl);
+      try {
+        const formData = new FormData();
+        formData.append('pdfFile', file);
+
+        // Send POST request to backend
+        const response = await axios.post('http://127.0.0.1:8000/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        // Handle response from backend
+        const { fileName, fileUrl } = response.data;
+        setMessages([
+          ...messages,
+          { user: 'You', content: '', type: 'file', fileName, fileUrl },
+        ]);
+        setPdfUrl(fileUrl);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
     }
   };
+
 
   const triggerFileInput = () => {
     if (fileInputRef.current) {

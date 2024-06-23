@@ -1,13 +1,14 @@
-import { useState } from 'react'
 import './App.css'
-import ChatBox from './ChatBot'
+import ChatBox from './ChatBox'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
     <>
-      <div>
+      <div style={{display:'flex'}}>
+        <ToastContainer />
         <ChatBox/>
       </div>
 

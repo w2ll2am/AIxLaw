@@ -1,7 +1,7 @@
-// ChatBox.tsx
 import React, { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperclip } from '@fortawesome/free-solid-svg-icons';
+import { faPaperPlane, faPaperclip, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { toast } from 'react-toastify';
 
 interface Message {
   user: string;
@@ -26,10 +26,18 @@ const ChatBox: React.FC = () => {
 
   useEffect(scrollToBottom, [messages]);
 
+  useEffect(() => {
+    if (pdfUrl) {
+      console.log(pdfUrl);
+    }
+  }, [pdfUrl]);
+
   const handleSendMessage = () => {
     if (input.trim() !== '') {
       setMessages([...messages, { user: 'You', content: input, type: 'text' }]);
       setInput('');
+    } else {
+      showAlertMessage('Please enter a message.');
     }
   };
 
@@ -61,11 +69,38 @@ const ChatBox: React.FC = () => {
     }
   };
 
+  const closePdf = () => {
+    setMessages([]);
+    setPdfUrl(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
+
+  const showAlertMessage = (message: string) => {
+    toast.error(message, {
+      position: "top-left",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      style: {
+        background: '#f0f0f0', 
+        color: '#000000', 
+        fontSize: '16px', 
+        textAlign: 'center', 
+      },
+    });
+  };
+
   return (
-    <div style={styles.chatBoxContainer}>
-      {pdfUrl && (
+    <div style={styles.screen}>
+    {pdfUrl && (
         <iframe src={pdfUrl} style={styles.pdfViewer} title="PDF Viewer" />
-      )}
+    )}
+    <div style={pdfUrl==null ? styles.ChatBoxContainerWithoutPdf : styles.ChatBoxContainerWithPdf}>
       <div style={styles.messagesContainer}>
         {messages.map((message, index) => (
           <div key={index} style={message.type === 'file' ? styles.fileMessage : styles.message}>
@@ -82,6 +117,11 @@ const ChatBox: React.FC = () => {
         <div ref={messagesEndRef} />
       </div>
       <div style={styles.inputContainer}>
+        {pdfUrl==null ? <></> : <FontAwesomeIcon
+          icon={faTimes}
+          style={styles.icon}
+          onClick={closePdf}
+        />}
         <FontAwesomeIcon
           icon={faPaperclip}
           style={styles.icon}
@@ -102,24 +142,43 @@ const ChatBox: React.FC = () => {
           accept="application/pdf"
           style={styles.fileInput}
         />
-        <button onClick={handleSendMessage} style={styles.sendButton}>
-          Send
-        </button>
+        <FontAwesomeIcon
+          icon={faPaperPlane}
+          style={styles.icon}
+          onClick={handleSendMessage}
+        />
       </div>
+    </div>
     </div>
   );
 };
 
 const styles: { [key: string]: React.CSSProperties } = {
-  chatBoxContainer: {
+  screen: {
     display: 'flex',
+    flexDirection: 'row',
+  },
+  ChatBoxContainerWithoutPdf: {
+    display: 'flex',
+    justifyContent: 'flex-start',
     flexDirection: 'column',
-    justifyContent: 'space-between',
     width: '100vw',
     height: '100vh',
-    backgroundColor: '#f5f5f5',
-    boxSizing: 'border-box',
     fontFamily: 'Arial, sans-serif',
+  },
+  ChatBoxContainerWithPdf: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    flexDirection: 'column',
+    width: '30vw',
+    height: '100vh',
+    fontFamily: 'Arial, sans-serif',
+  },
+  pdfViewer: {
+    display: 'flex',
+    justifyContent: 'flex-start',
+    width: '70vw',
+    height: '100vh',
   },
   messagesContainer: {
     flex: 1,
@@ -135,63 +194,42 @@ const styles: { [key: string]: React.CSSProperties } = {
     padding: '10px',
     backgroundColor: '#e1f5fe',
     borderRadius: '8px',
-    maxWidth: '80%',
-    alignSelf: 'flex-start',
+    maxWidth: '100vw',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
   },
   fileMessage: {
-    display: 'flex',
-    justifyContent: 'center',
     marginBottom: '10px',
     padding: '10px',
     backgroundColor: '#e1f5fe',
     borderRadius: '8px',
-    maxWidth: '80%',
-    alignSelf: 'center',
+    maxWidth: '100vw',
+    alignItems: 'center',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
   },
   inputContainer: {
     display: 'flex',
     alignItems: 'center',
     padding: '10px',
-    borderTop: '1px solid #ccc',
     backgroundColor: '#ffffff',
   },
   icon: {
     cursor: 'pointer',
-    marginRight: '10px',
+    marginLeft: '5px',
+    marginRight: '5px',
     color: '#007bff',
   },
   input: {
     flex: 1,
     padding: '10px',
     border: '1px solid #ccc',
-    borderRadius: '5px 0 0 5px',
+    borderRadius: '5px 5px 5px 5px',
     outline: 'none',
     boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+    marginLeft: '5px',
+    marginRight: '5px',
   },
   fileInput: {
     display: 'none',
-  },
-  sendButton: {
-    padding: '10px 15px',
-    border: 'none',
-    borderRadius: '0 5px 5px 0',
-    backgroundColor: '#007bff',
-    color: 'white',
-    cursor: 'pointer',
-    marginLeft: '10px',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-  },
-  pdfViewer: {
-    position: 'fixed',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: '80%',
-    height: '80%',
-    border: 'none',
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
   },
 };
 
